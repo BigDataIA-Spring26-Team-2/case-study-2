@@ -1,0 +1,93 @@
+industries:
+  Manufacturing:
+    sector: Industrials
+    h_r_base: 72
+  Healthcare Services:
+    sector: Healthcare
+    h_r_base: 78
+  Business Services:
+    sector: Services
+    h_r_base: 75
+  Retail:
+    sector: Consumer
+    h_r_base: 70
+  Financial Services:
+    sector: Financial
+    h_r_base: 80
+
+filing_config:
+  types:
+    - "10-K"
+    - "10-Q"
+    - "8-K"
+  default_limit: 3
+  date_cutoff: "2024-01-01"
+
+target_companies:
+  CAT:
+    name: Caterpillar Inc
+    patent_names:
+      - "Caterpillar Inc."
+      - "Caterpillar Paving Products Inc."
+      - "Caterpillar Motoren GmbH & Co. KG"
+    industry: Manufacturing
+    
+  DE:
+    name: Deere & Company
+    patent_names:
+      - "Deere & Company"
+      - "DEERE & COMPANY"
+    industry: Manufacturing
+    
+  UNH:
+    name: UnitedHealth Group
+    patent_names:
+      - "UnitedHealth Group Incorporated"
+      - "UNITEDHEALTH GROUP INCORPORATED"
+    industry: Healthcare Services
+    
+  HCA:
+    name: HCA Healthcare
+    patent_names:
+      - "C/HCA, Inc."
+      - "HCA Holdings, Inc."
+    industry: Healthcare Services
+    
+  ADP:
+    name: ADP
+    patent_names:
+      - "ADP, LLC"
+      - "ADP, Inc."
+    industry: Business Services
+    
+  PAYX:
+    name: Paychex Inc
+    patent_names: []
+    industry: Business Services
+    
+  WMT:
+    name: Walmart Inc
+    patent_names:
+      - "Walmart Apollo, LLC"
+      - "WAL-MART STORES, INC."
+      - "Wal-Mart Stores, Inc."
+    industry: Retail
+    
+  TGT:
+    name: Target Corporation
+    patent_names:
+      - "TARGET BRANDS, INC."
+      - "Target Brands, Inc."
+    industry: Retail
+    
+  JPM:
+    name: JPMorgan Chase
+    patent_names:
+      - "JPMORGAN CHASE BANK, N.A."
+    industry: Financial Services
+    
+  GS:
+    name: Goldman Sachs
+    patent_names:
+      - "Goldman Sachs & Co. LLC"
+    industry: Financial Services

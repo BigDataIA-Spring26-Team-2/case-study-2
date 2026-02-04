@@ -1,0 +1,362 @@
+# GitHub Organization Mappings
+github_orgs:
+  CAT: []
+  DE: ["JohnDeere", "johndeere"]
+  UNH: ["optum", "uhg"]
+  HCA: ["HCA-Healthcare"]
+  ADP: ["adplabs"]
+  PAYX: ["paychex"]
+  WMT: ["walmart", "walmartlabs"]
+  TGT: ["target"]
+  JPM: ["jpmorganchase"]
+  GS: ["goldmansachs", "gs-quant"]
+
+
+detection:
+  min_similarity: 0.35
+  
+  # Exhaustive AI topic list (250+ tags)
+  ai_topics:
+    # Core AI/ML
+    - machine-learning
+    - ml
+    - deep-learning
+    - artificial-intelligence
+    - ai
+    - neural-network
+    - neural-networks
+    
+    # NLP/Language
+    - nlp
+    - natural-language-processing
+    - text-mining
+    - sentiment-analysis
+    - named-entity-recognition
+    - ner
+    - text-classification
+    - question-answering
+    - text-generation
+    - text-summarization
+    - machine-translation
+    - language-model
+    - llm
+    - large-language-model
+    - gpt
+    - bert
+    - transformer
+    - transformers
+    - chatbot
+    - conversational-ai
+    - dialogue-system
+    - speech-recognition
+    - speech-synthesis
+    - voice-assistant
+    - speech-to-text
+    - text-to-speech
+    
+    # Computer Vision
+    - computer-vision
+    - image-recognition
+    - image-classification
+    - object-detection
+    - object-tracking
+    - image-segmentation
+    - semantic-segmentation
+    - instance-segmentation
+    - face-recognition
+    - facial-recognition
+    - face-detection
+    - pose-estimation
+    - human-pose-estimation
+    - optical-character-recognition
+    - ocr
+    - image-generation
+    - style-transfer
+    - super-resolution
+    - image-enhancement
+    - 3d-reconstruction
+    - video-analysis
+    - video-processing
+    - action-recognition
+    - scene-understanding
+    - visual-recognition
+    
+    # Deep Learning Architectures
+    - cnn
+    - convolutional-neural-network
+    - rnn
+    - recurrent-neural-network
+    - lstm
+    - gru
+    - attention-mechanism
+    - self-attention
+    - multi-head-attention
+    - gan
+    - generative-adversarial-network
+    - vae
+    - variational-autoencoder
+    - diffusion
+    - diffusion-models
+    - stable-diffusion
+    - generative-ai
+    - generative-models
+    - autoencoder
+    - resnet
+    - vgg
+    - inception
+    - mobilenet
+    - efficientnet
+    - yolo
+    - faster-rcnn
+    - mask-rcnn
+    
+    # ML Algorithms
+    - supervised-learning
+    - unsupervised-learning
+    - semi-supervised-learning
+    - self-supervised-learning
+    - classification
+    - regression
+    - clustering
+    - dimensionality-reduction
+    - feature-engineering
+    - feature-selection
+    - ensemble-learning
+    - random-forest
+    - gradient-boosting
+    - xgboost
+    - lightgbm
+    - catboost
+    - decision-trees
+    - svm
+    - support-vector-machine
+    - linear-regression
+    - logistic-regression
+    - naive-bayes
+    - knn
+    - k-nearest-neighbors
+    - pca
+    - principal-component-analysis
+    - tsne
+    - umap
+    
+    # Reinforcement Learning
+    - reinforcement-learning
+    - rl
+    - deep-reinforcement-learning
+    - drl
+    - q-learning
+    - deep-q-network
+    - dqn
+    - policy-gradient
+    - actor-critic
+    - a3c
+    - ppo
+    - ddpg
+    - multi-agent
+    - multi-agent-systems
+    - game-ai
+    - robotics
+    - robot-learning
+    - simulation
+    - gym
+    - openai-gym
+    - unity-ml
+    
+    # Data Science
+    - data-science
+    - data-analysis
+    - data-mining
+    - data-analytics
+    - predictive-analytics
+    - statistical-analysis
+    - statistics
+    - time-series
+    - time-series-analysis
+    - time-series-forecasting
+    - forecasting
+    - anomaly-detection
+    - outlier-detection
+    - recommendation-system
+    - recommender-system
+    - collaborative-filtering
+    - content-based-filtering
+    - exploratory-data-analysis
+    - eda
+    - data-visualization
+    - business-intelligence
+    - bi
+    - ab-testing
+    - hypothesis-testing
+    
+    # MLOps/Production
+    - mlops
+    - ml-engineering
+    - model-deployment
+    - model-serving
+    - model-monitoring
+    - model-management
+    - experiment-tracking
+    - mlflow
+    - kubeflow
+    - airflow
+    - prefect
+    - dagster
+    - pipeline
+    - ml-pipeline
+    - data-pipeline
+    - feature-store
+    - model-registry
+    - continuous-training
+    - model-versioning
+    - ml-infrastructure
+    - model-optimization
+    - model-performance
+    
+    # Frameworks/Libraries
+    - tensorflow
+    - pytorch
+    - keras
+    - scikit-learn
+    - sklearn
+    - jax
+    - flax
+    - mxnet
+    - caffe
+    - caffe2
+    - theano
+    - paddle
+    - paddlepaddle
+    - onnx
+    - tensorrt
+    - opencv
+    - fastai
+    - huggingface
+    - transformers-library
+    - langchain
+    - llamaindex
+    - haystack
+    - semantic-kernel
+    - chainlit
+    - gradio
+    - streamlit
+    
+    # Development Tools
+    - jupyter
+    - jupyter-notebook
+    - jupyterlab
+    - colab
+    - kaggle
+    - weights-and-biases
+    - wandb
+    - tensorboard
+    - neptune
+    - clearml
+    - sacred
+    - optuna
+    - ray
+    - ray-tune
+    - dask
+    - rapids
+    
+    # Advanced/Specialized
+    - automl
+    - automated-machine-learning
+    - neural-architecture-search
+    - nas
+    - hyperparameter-optimization
+    - hyperparameter-tuning
+    - bayesian-optimization
+    - transfer-learning
+    - few-shot-learning
+    - zero-shot-learning
+    - one-shot-learning
+    - meta-learning
+    - continual-learning
+    - lifelong-learning
+    - federated-learning
+    - distributed-learning
+    - privacy-preserving-ml
+    - differential-privacy
+    - explainable-ai
+    - xai
+    - interpretable-ml
+    - model-interpretability
+    - lime
+    - shap
+    - fairness
+    - bias-detection
+    - fairness-ml
+    - adversarial-ml
+    - adversarial-examples
+    - adversarial-robustness
+    - model-compression
+    - quantization
+    - pruning
+    - knowledge-distillation
+    - edge-ai
+    - tinyml
+    - on-device-ml
+    - mobile-ml
+    - iot-ml
+    
+    # Research Areas
+    - research
+    - paper-implementation
+    - arxiv
+    - neurips
+    - icml
+    - iclr
+    - cvpr
+    - emnlp
+    - acl
+  
+  ai_languages:
+    - Python
+    - Jupyter Notebook
+    - R
+    - Julia
+    - Scala
+    - Java
+    - C++
+    - CUDA
+    - Swift
+  
+  ai_references:
+    - machine learning model training inference
+    - deep learning neural network architecture
+    - natural language processing text analysis
+    - computer vision image recognition detection
+    - artificial intelligence intelligent system
+    - transformer attention mechanism language
+    - convolutional neural network cnn feature
+    - recurrent neural network lstm sequence
+    - generative adversarial network gan synthesis
+    - reinforcement learning agent policy reward
+    - predictive analytics forecasting regression
+    - recommendation engine collaborative filtering
+    - anomaly detection outlier unsupervised
+    - sentiment analysis opinion mining classification
+    - named entity recognition ner extraction
+    - object detection yolo faster-rcnn
+    - semantic segmentation pixel-wise classification
+    - time series forecasting arima prophet
+    - clustering kmeans dbscan hierarchical
+    - dimensionality reduction pca tsne umap
+    - hyperparameter tuning optimization bayesian
+    - transfer learning fine-tuning pretrained
+    - model deployment serving mlops production
+    - feature engineering selection importance
+    - ensemble learning boosting bagging stacking
+    - neural architecture search automl optimization
+
+
+scoring:
+  topic_match_weight: 50
+  language_weight: 20
+  semantic_weight: 30
+  min_score_threshold: 35
+  
+  ratio_weight: 40
+  stars_weight: 30
+  diversity_weight: 30
