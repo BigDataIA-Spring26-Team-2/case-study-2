@@ -1,0 +1,111 @@
+detection:
+  min_similarity: 0.40
+  
+  ai_references:
+    - neural network architecture training backpropagation gradient descent optimization
+    - deep learning convolutional recurrent network layer activation function
+    - machine learning supervised unsupervised classification regression prediction
+    - artificial intelligence cognitive computing intelligent agent decision system
+    - statistical learning generative discriminative probabilistic graphical model
+    - pattern recognition feature extraction dimensionality reduction clustering
+    - ensemble learning random forest gradient boosting decision tree bagging
+    - natural language processing text mining semantic analysis understanding
+    - transformer attention mechanism self-attention multi-head encoder decoder
+    - language model pre-training fine-tuning transfer learning contextual embedding
+    - large language model prompt engineering in-context learning few-shot
+    - question answering information retrieval document understanding reasoning
+    - sentiment analysis opinion mining emotion detection text classification
+    - named entity recognition relation extraction knowledge graph construction
+    - machine translation sequence-to-sequence neural encoder-decoder attention
+    - text generation summarization paraphrase dialogue conversational system
+    - speech recognition acoustic model language model decoder transcription
+    - retrieval augmented generation vector database semantic search similarity
+    - computer vision image recognition object detection classification segmentation
+    - convolutional neural network feature map pooling stride padding filter
+    - object detection bounding box region proposal non-maximum suppression
+    - semantic segmentation instance segmentation panoptic pixel-wise classification
+    - image generation diffusion model denoising score-based generative
+    - generative adversarial network generator discriminator latent space synthesis
+    - vision transformer patch embedding positional encoding attention pooling
+    - self-supervised learning contrastive learning augmentation invariance representation
+    - video analysis action recognition temporal modeling frame sequence motion
+    - 3d reconstruction depth estimation stereo vision point cloud mesh
+    - optical character recognition text detection recognition scene understanding
+    - face recognition detection alignment verification identification biometric
+    - diffusion model denoising score matching sampling generation synthesis
+    - stable diffusion latent diffusion text-to-image conditioning guidance
+    - generative pre-trained transformer autoregressive language completion
+    - variational autoencoder latent representation generation reconstruction
+    - text-to-image generation conditioning cross-attention guidance synthesis
+    - multimodal learning vision language alignment contrastive embedding
+    - prompt engineering instruction tuning chain-of-thought reasoning
+    - reinforcement learning from human feedback preference optimization alignment
+    - retrieval augmented generation knowledge base vector search grounding
+    - mixture of experts sparse activation routing gating specialized models
+    - reinforcement learning reward policy value function temporal difference
+    - deep reinforcement learning q-learning actor-critic advantage function
+    - policy gradient optimization exploration exploitation trajectory sampling
+    - multi-agent learning game theory nash equilibrium cooperative competitive
+    - inverse reinforcement learning imitation learning demonstration expert
+    - model-based planning world model simulation trajectory optimization
+    - offline reinforcement learning batch conservative pessimistic constraint
+    - model deployment serving inference optimization latency throughput
+    - continuous training online learning incremental adaptation updating
+    - model monitoring drift detection performance degradation alerting
+    - feature engineering selection extraction transformation preprocessing
+    - automated machine learning hyperparameter optimization architecture search
+    - federated learning distributed training privacy-preserving collaborative
+    - model compression quantization pruning distillation efficient deployment
+    - explainable ai interpretability attention visualization feature importance
+    - fairness bias detection mitigation demographic parity equalized odds
+    - adversarial robustness attack defense perturbation certified guarantee
+    - neural architecture search differentiable optimization meta-learning
+    - continual learning lifelong learning catastrophic forgetting plasticity
+    - causal inference counterfactual reasoning intervention treatment effect
+    - graph neural network message passing aggregation node edge embedding
+    - time series forecasting temporal modeling attention autoregressive recurrent
+    - anomaly detection outlier unsupervised novelty one-class isolation
+    - recommendation system collaborative filtering matrix factorization embedding
+    - knowledge distillation teacher student compression transfer dark knowledge
+    - meta-learning few-shot learning learning-to-learn adaptation optimization
+    - active learning query selection uncertainty sampling pool-based acquisition
+    - semi-supervised learning pseudo-labeling consistency regularization unlabeled
+    - medical imaging diagnosis detection segmentation clinical decision support
+    - autonomous vehicle perception planning control localization mapping sensor
+    - robotics manipulation grasping motion planning inverse kinematics trajectory
+    - drug discovery molecular design protein folding binding affinity prediction
+    - financial forecasting risk assessment fraud detection algorithmic trading
+    - manufacturing predictive maintenance quality control defect detection optimization
+  
+  ai_cpc_codes:
+    - G06N
+    - G06N3
+    - G06N5
+    - G06N7
+    - G06N20
+    - G06K9
+    - G06T
+    - G06V
+    - G10L
+    - G06F40
+    - G06F17
+    - G06Q10
+    - G06F16
+    - B25J
+    - G05B
+    - G16H
+    - A61B
+
+scoring:
+  volume_weight: 40
+  recency_weight: 30
+  intensity_weight: 30
+  
+  min_score_threshold: 0.35
+  recency_years: 2
+  
+  max_volume_patents: 100
+  max_recency_ratio: 0.40
+  max_intensity_ratio: 0.20
+  
+  default_year: 2020
