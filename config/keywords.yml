@@ -1,0 +1,134 @@
+# PE Org-AI-R Framework Keywords
+# Optimized AI/ML/Data Science taxonomy
+
+dimensions:
+  talent_skills:
+    weight: 0.15
+    
+    # ============================================================
+    # JOB TITLES - Common AI roles at all seniority levels
+    # These are used for SCRAPING - seniority extracted post-scrape
+    # ============================================================
+    job_titles:
+      # Core ML/AI Engineering (highest volume)
+      - "Machine Learning Engineer"
+      - "ML Engineer"
+      - "Data Scientist"
+      - "AI Engineer"
+      - "AI/ML Engineer"
+      - "MLOps Engineer"
+      - "ML Platform Engineer"
+      
+      # Specialized AI Roles
+      - "Deep Learning Engineer"
+      - "NLP Engineer"
+      - "Computer Vision Engineer"
+      - "LLM Engineer"
+      - "Generative AI Engineer"
+      - "GenAI Engineer"
+      - "Prompt Engineer"
+      - "AI Safety Engineer"
+      
+      # Research & Science Roles
+      - "Research Scientist"
+      - "Applied Scientist"
+      - "ML Researcher"
+      - "AI Researcher"
+      - "AI Scientist"
+      - "Machine Learning Scientist"
+      
+      # Infrastructure & Platform
+      - "ML Infrastructure Engineer"
+      - "AI Platform Engineer"
+      - "ML Systems Engineer"
+      - "ML Inference Engineer"
+      - "Model Deployment Engineer"
+      
+      # Agentic AI (emerging 2025+)
+      - "AI Agent Engineer"
+      - "Agentic AI Engineer"
+      
+      # Emerging Roles
+      - "Robotics Engineer"
+      - "Autonomous Systems Engineer"
+      - "Perception Engineer"
+      - "Reinforcement Learning Engineer"
+      - "Recommendation Systems Engineer"
+      
+      # Quantitative AI (Finance)
+      - "Quantitative AI Researcher"
+      - "AI Quant"
+      - "ML Quant"
+      
+      # Leadership (high-value signals)
+      - "Head of AI"
+      - "Head of Machine Learning"
+      - "Director of AI"
+      - "Director of Machine Learning"
+      - "VP of AI"
+      - "VP of Machine Learning"
+      - "Chief AI Officer"
+      - "AI Engineering Manager"
+      - "ML Engineering Manager"
+      - "Data Science Manager"
+    
+    # ============================================================
+    # SEMANTIC SCORING - Reference descriptions for similarity
+    # ============================================================
+    ai_similarity_threshold: 0.3
+    
+    ai_references:
+      # Core ML/AI Engineering
+      - "Machine learning engineer building deep learning models with PyTorch TensorFlow"
+      - "AI engineer designing neural networks and deploying ML models at scale"
+      - "Deep learning engineer creating artificial neural networks and training models"
+      - "Applied scientist solving business problems with machine learning algorithms"
+      
+      # Data Science
+      - "Data scientist developing predictive models using statistical analysis and ML"
+      - "Research scientist conducting AI research and publishing papers"
+      - "Quantitative analyst building algorithmic trading models with machine learning"
+      
+      # NLP & LLM (2024-2026 boom)
+      - "NLP engineer working on transformers large language models text processing"
+      - "LLM engineer fine-tuning large language models like GPT Claude Llama"
+      - "Prompt engineer designing prompts and optimizing LLM outputs"
+      - "Conversational AI engineer building chatbots virtual assistants dialogue systems"
+      
+      # GenAI & Agents (emerging 2025-2026)
+      - "Generative AI engineer building GenAI applications with foundation models"
+      - "AI agent developer creating autonomous agents and agentic workflows"
+      - "AI solutions architect designing enterprise AI systems and integrations"
+      
+      # Computer Vision & Robotics
+      - "Computer vision engineer developing image recognition object detection systems"
+      - "Robotics engineer building autonomous systems with AI control algorithms"
+      - "Autonomous vehicle engineer developing self-driving perception systems"
+      
+      # Infrastructure & Ops
+      - "MLOps engineer building ML pipelines model monitoring CI/CD infrastructure"
+      - "AI platform engineer building infrastructure for training deploying models"
+      - "Data engineer building ETL pipelines for analytics and machine learning"
+      
+      # Specialized AI
+      - "Recommendation systems engineer building personalization algorithms"
+      - "Speech recognition engineer developing ASR text-to-speech systems"
+      - "AI safety researcher working on alignment interpretability robustness"
+      - "AI ethics specialist ensuring responsible AI development and deployment"
+    
+    acronyms:
+      ml: "machine learning"
+      ai: "artificial intelligence"
+      nlp: "natural language processing"
+      llm: "large language model"
+      genai: "generative ai"
+      mlops: "ml operations"
+      cv: "computer vision"
+      dl: "deep learning"
+    
+    seniority_keywords:
+      leadership: ["chief", "cto", "head of", "vp ", "vice president", "director"]
+      senior: ["senior", "sr.", "sr ", "principal", "staff", "lead", "manager"]
+      mid: ["mid", "associate"]
+      entry: ["junior", "jr.", "jr ", "intern"]
+
