@@ -18,7 +18,15 @@ load_dotenv()
 def insert_signal(conn, signal):
     """Insert into external_signals."""
     cursor = conn.cursor()
+    company_id = signal["company_id"]  
+
     try:
+        cursor.execute(
+            "DELETE FROM external_signals WHERE company_id = %s AND category = 'patent'", 
+            (company_id,)
+        )
+        conn.commit()
+        
         cursor.execute("""
             INSERT INTO external_signals (
                 id, company_id, category, source, score, confidence,

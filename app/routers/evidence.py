@@ -4,13 +4,18 @@ from pydantic import BaseModel
 from uuid import UUID, uuid4
 from typing import Optional, List
 import subprocess
+import logging
+from pathlib import Path
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 from app.database import get_db
 
 router = APIRouter(prefix="/api/v1/evidence", tags=["evidence"])
 
 
-# ========== ADD THESE MODELS ==========
 class BackfillRequest(BaseModel):
     tickers: Optional[List[str]] = None
     pipelines: List[str] = ["sec", "job", "patent", "github"]
@@ -37,6 +42,34 @@ COMPANIES = {
 }
 
 
+
+def run_collection_task(task_id: str, tickers: List[str], pipelines: List[str]):
+    """Background task that runs collect_evidence.py"""
+    logger.info(f"[BACKGROUND TASK {task_id}] Starting collection")
+    
+    try:
+        cmd = [
+            "poetry", "run", "python", "scripts/collect_evidence.py",
+            "--companies", ",".join(tickers),
+            "--pipelines", ",".join(pipelines)
+        ]
+        
+        logger.info(f"[BACKGROUND TASK {task_id}] Running: {' '.join(cmd)}")
+        
+        # ADD: unbuffered output
+        result = subprocess.run(
+            cmd, 
+            capture_output=False,  # Changed: don't capture, let it print directly
+            text=True, 
+            cwd=Path.cwd(),
+            bufsize=0  # Unbuffered
+        )
+        
+        logger.info(f"[BACKGROUND TASK {task_id}] Completed with code: {result.returncode}")
+            
+    except Exception as e:
+        logger.error(f"[BACKGROUND TASK {task_id}] Exception: {e}")
+        
 def ensure_companies_exist(tickers: List[str], conn):
     """Create companies if they don't exist."""
     cursor = conn.cursor()
@@ -69,20 +102,7 @@ def ensure_companies_exist(tickers: List[str], conn):
     conn.commit()
 
 
-def run_collection_task(task_id: str, tickers: List[str], pipelines: List[str]):
-    """Background task that runs collect_evidence.py"""
-    try:
-        cmd = [
-            "poetry", "run", "python", "scripts/collect_evidence.py",
-            "--companies", ",".join(tickers),
-            "--pipelines", ",".join(pipelines)
-        ]
-        subprocess.run(cmd, capture_output=True, text=True)
-    except Exception as e:
-        print(f"Task {task_id} failed: {e}")
 
-
-# ========== ADD THIS ENDPOINT ==========
 @router.post("/backfill", response_model=BackfillResponse)
 async def backfill_evidence(
     request: BackfillRequest, 

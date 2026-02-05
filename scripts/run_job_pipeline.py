@@ -1,12 +1,10 @@
-"""Job Signal Collection Pipeline - CLI Runner with Path Fix.
-"""
+"""Job Signal Collection Pipeline - CORRECTED to track total_scraped."""
 import sys
 from pathlib import Path
 
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-# Now imports work
 import argparse
 import snowflake.connector
 from datetime import datetime
@@ -15,7 +13,6 @@ from app.config import get_settings
 from app.core.config_loader import get_target_companies
 from app.pipelines.job_signal_collector import scrape_ai_jobs, prepare_for_snowflake
 from app.services.job_signal_service import JobSignalService
-
 
 
 def collect_for_company(
@@ -39,11 +36,14 @@ def collect_for_company(
     print(f"\n  [1/3] Scraping jobs...")
     df = scrape_ai_jobs(ticker, company_name, max_jobs=max_jobs, hours_old=hours_old)
     
+    # EXTRACT total_scraped from DataFrame attrs (set in scrape_ai_jobs)
+    total_jobs_scraped = df.attrs.get('total_scraped', len(df))
+    
     if df.empty:
-        print(f"  → No jobs found")
+        print(f" No jobs found")
         return {"status": "no_jobs", "count": 0}
     
-    print(f"  → Found {len(df)} unique jobs")
+    print(f" Found {len(df)} AI jobs (from {total_jobs_scraped} total scraped)")
     
     # Stats
     ai_verified = df['ai_score'].ge(50).sum()
@@ -64,7 +64,7 @@ def collect_for_company(
     # Top jobs
     print(f"\n  Top jobs by AI score:")
     for i, (_, job) in enumerate(df.nlargest(3, 'ai_score').iterrows(), 1):
-        loc = job.get('location', 'NULL')[:20]
+        loc = str(job.get('location', 'NULL') or 'NULL')[:20]
         print(f"    {i}. {job['title'][:40]:40} [{job['seniority_label']:10}] {loc:20} (score: {job['ai_score']:.0f})")
     
     # Insert
@@ -72,14 +72,25 @@ def collect_for_company(
     signals = prepare_for_snowflake(df, company_id, ticker)
     inserted = service.insert_job_signals(signals)
     
-    print(f"  → Inserted {inserted}/{len(signals)} signals")
+    print(f"  Inserted {inserted}/{len(signals)} signals")
     
     if inserted < len(signals):
-        print(f"  ⚠ {len(signals) - inserted} signals failed")
+        print(f"  {len(signals) - inserted} signals failed")
     
-    # Update summary
+    # Update summary with pre-calculated stats
     print(f"\n  [3/3] Updating company summary...")
-    service.update_company_summary(company_id, ticker)
+    
+    summary_stats = {
+        'total_jobs_scraped': total_jobs_scraped,   # TOTAL before AI filter (e.g., 312)
+        'ai_jobs': len(df),                          # AI jobs only (e.g., 238)
+        'ai_verified': int(ai_verified),
+        'multi_source': int(multi_source),
+        'with_salary': int(with_salary),
+        'seniority': sen_counts,
+        'ai_ratio': len(df) / total_jobs_scraped if total_jobs_scraped > 0 else 1.0
+    }
+    
+    service.update_company_summary(company_id, ticker, summary_stats)
     
     # Verify
     cursor = conn.cursor()
@@ -91,7 +102,7 @@ def collect_for_company(
     hiring_score = result[0] if result else 0.0
     cursor.close()
     
-    print(f"  → Hiring score: {hiring_score:.1f}/100")
+    print(f"  Hiring score: {hiring_score:.1f}/100")
     
     return {
         "status": "success",
@@ -119,8 +130,8 @@ Examples:
     group.add_argument('--ticker', type=str, help='Company ticker')
     group.add_argument('--all', action='store_true', help='All companies from YAML')
     
-    parser.add_argument('--max-jobs', type=int, default=50, help='Max jobs per query (default: 100)')
-    parser.add_argument('--days', type=int, default=10, help='Days of data to search (default: 30)')
+    parser.add_argument('--max-jobs', type=int, default=50, help='Max jobs per query (default: 50)')
+    parser.add_argument('--days', type=int, default=10, help='Days of data to search (default: 10)')
     
     args = parser.parse_args()
     
@@ -146,9 +157,9 @@ Examples:
             schema=settings.snowflake.schema,
             role=settings.snowflake.role
         )
-        print(f"✓ Connected to {settings.snowflake.database}.{settings.snowflake.schema}")
+        print(f"Connected to {settings.snowflake.database}.{settings.snowflake.schema}")
     except Exception as e:
-        print(f"✗ Connection failed: {e}")
+        print(f"Connection failed: {e}")
         sys.exit(1)
     
     service = JobSignalService(conn)
@@ -160,7 +171,7 @@ Examples:
         print(f"\nProcessing ALL {len(companies_config)} companies from companies.yml")
     else:
         if args.ticker not in companies_config:
-            print(f"\n✗ Ticker '{args.ticker}' not found in companies.yml")
+            print(f"\nTicker '{args.ticker}' not found in companies.yml")
             print(f"Available: {', '.join(companies_config.keys())}")
             conn.close()
             sys.exit(1)
@@ -179,7 +190,7 @@ Examples:
         cursor.close()
         
         if not result:
-            print(f"\n⚠ {ticker} not in database - skipping")
+            print(f"\n{ticker} not in database - skipping")
             results[ticker] = {"status": "not_in_db"}
             continue
         
@@ -190,7 +201,7 @@ Examples:
             result = collect_for_company(conn, service, ticker, company_name, company_id, max_jobs=args.max_jobs, hours_old=args.days * 24)
             results[ticker] = result
         except Exception as e:
-            print(f"\n✗ Error: {str(e)[:150]}")
+            print(f"\n Error: {str(e)[:150]}")
             results[ticker] = {"status": "error", "error": str(e)[:200]}
     
     conn.close()

@@ -204,7 +204,7 @@ async def get_company_signals_by_category(company_id: UUID, category: str, conn 
                 "ai_ratio": metadata.get('ai_ratio', 0.0)
             },
             "by_year": by_year,
-            "patents": top_patents,  # ADD THIS - use top_patents from metadata
+            "patents": top_patents,  
             "metadata": metadata
         }
     

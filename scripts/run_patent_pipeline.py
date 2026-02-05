@@ -20,7 +20,14 @@ from app.pipelines.patent_scanner import scan_company
 
 def insert_signal(conn, signal):
     cursor = conn.cursor()
+    company_id = signal["company_id"]  
+
     try:
+        cursor.execute(
+            "DELETE FROM external_signals WHERE company_id = %s AND category = 'patent'", (company_id,)
+        )
+        conn.commit()
+
         cursor.execute("""
             INSERT INTO external_signals (
                 id, company_id, category, source, score, confidence,
@@ -153,11 +160,11 @@ Examples:
     
     api_key = os.getenv('PATENT_API_KEY') or os.getenv('PATENT_API')
     if not api_key:
-        print("\n✗ PATENT_API_KEY not found")
+        print("\nPATENT_API_KEY not found")
         print("  Add to .env: PATENT_API_KEY=your_key")
         sys.exit(1)
     
-    print(f"✓ API key found")
+    print(f"API key found")
     
     settings = get_settings()
     companies = get_target_companies()
@@ -172,7 +179,7 @@ Examples:
         schema=settings.snowflake.schema,
         role=settings.snowflake.role
     )
-    print(f"✓ Connected")
+    print(f"Connected")
     
     s3_client = boto3.client('s3')
     bucket = settings.s3.bucket or "pe-org-air-dev"

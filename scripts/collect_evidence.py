@@ -288,10 +288,10 @@ Examples:
     print("-"*70)
     
     for r in all_results:
-        sec_icon = '✓' if r['sec'] else ('✗' if r['sec'] is False else '-')
-        job_icon = '✓' if r['job'] else ('✗' if r['job'] is False else '-')
-        patent_icon = '✓' if r['patent'] else ('✗' if r['patent'] is False else '-')
-        github_icon = '✓' if r['github'] else ('✗' if r['github'] is False else '-')
+        sec_icon = 'PASS' if r['sec'] else ('FAIL' if r['sec'] is False else '-')
+        job_icon = 'PASS' if r['job'] else ('FAIL' if r['job'] is False else '-')
+        patent_icon = 'PASS' if r['patent'] else ('FAIL' if r['patent'] is False else '-')
+        github_icon = 'PASS' if r['github'] else ('FAIL' if r['github'] is False else '-')
         
         print(f"{r['ticker']:<8} {sec_icon:<6} {job_icon:<6} {patent_icon:<8} {github_icon:<8}")
     

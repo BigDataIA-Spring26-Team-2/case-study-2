@@ -1,4 +1,4 @@
-"""Lean AI job scraper - config from YAML."""
+"""Lean AI job scraper - config from YAML - CORRECTED to track total_scraped."""
 from jobspy import scrape_jobs
 import pandas as pd
 import re
@@ -119,7 +119,10 @@ def dedupe(df: pd.DataFrame) -> pd.DataFrame:
     return result.drop(columns=['_keep', '_sources'])
 
 def scrape_ai_jobs(ticker: str, company_name: str, max_jobs: int = 100, hours_old: int = 240) -> pd.DataFrame:
-    """Scrape jobs with Playwright fallback if JobSpy fails/returns 0."""
+    """Scrape jobs with Playwright fallback if JobSpy fails/returns 0.
+    
+    Returns: DataFrame with AI jobs only, but stores total_scraped in df.attrs['total_scraped']
+    """
     
     job_titles = get_all_job_titles()
     all_jobs = []
@@ -183,7 +186,12 @@ def scrape_ai_jobs(ticker: str, company_name: str, max_jobs: int = 100, hours_ol
     df["ai_score"] = scores.apply(lambda x: x["score"])
     df["ai_similarity"] = scores.apply(lambda x: x["similarity"])
     df["is_ai"] = scores.apply(lambda x: x["is_ai"])
-    print(f"  [FILTER] AI jobs (similarity >= {get_similarity_threshold()}): {df['is_ai'].sum()}/{len(df)}") 
+    
+    # CRITICAL: Save total BEFORE filtering
+    total_before_filter = len(df)
+    ai_count = df['is_ai'].sum()
+    
+    print(f"  [FILTER] AI jobs (similarity >= {get_similarity_threshold()}): {ai_count}/{total_before_filter}") 
     
     # Seniority (if not already present from Playwright)
     if "seniority_label" not in df.columns:
@@ -199,7 +207,13 @@ def scrape_ai_jobs(ticker: str, company_name: str, max_jobs: int = 100, hours_ol
             return "mid"
         df["seniority_label"] = df["title"].apply(get_seniority_label)
     
-    return df[df["is_ai"]].drop(columns=["is_ai"])
+    # Filter to AI jobs only
+    df_ai_only = df[df["is_ai"]].drop(columns=["is_ai"])
+    
+    # STORE total_scraped in DataFrame attrs (not a column, but metadata)
+    df_ai_only.attrs['total_scraped'] = total_before_filter
+    
+    return df_ai_only
 
 
 def prepare_for_snowflake(df: pd.DataFrame, company_id: str, ticker: str) -> list[dict]:
