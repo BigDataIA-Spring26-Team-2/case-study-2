@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import structlog
 
 from app.routers import health, companies, assessments, dimensions
+from app.routers import documents, signals, evidence
 
 logger = structlog.get_logger()
 
@@ -27,6 +28,10 @@ app.include_router(health.router)
 app.include_router(companies.router)
 app.include_router(assessments.router)
 app.include_router(dimensions.router)
+
+app.include_router(evidence.router)
+app.include_router(signals.router)
+app.include_router(documents.router)
 
 
 @app.on_event("startup")

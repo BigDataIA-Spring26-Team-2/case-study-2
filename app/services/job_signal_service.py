@@ -54,7 +54,7 @@ class JobSignalService:
         return inserted_count
     
     def update_company_summary(self, company_id: str, ticker: str):
-        """Log Based Ratio-based scoring."""
+        """Update company_evidence_summary with rich aggregated metadata."""
         cursor = self.conn.cursor()
         
         merge_query = """
@@ -67,7 +67,10 @@ class JobSignalService:
                         SUM(CASE WHEN metadata:seniority_label::string = 'senior' THEN 1 ELSE 0 END) as senior,
                         SUM(CASE WHEN metadata:seniority_label::string = 'mid' THEN 1 ELSE 0 END) as mid,
                         SUM(CASE WHEN metadata:seniority_label::string = 'entry' THEN 1 ELSE 0 END) as entry,
-                        SUM(CASE WHEN metadata:multi_source::boolean = true THEN 1 ELSE 0 END) as multi_source
+                        SUM(CASE WHEN metadata:multi_source::boolean = true THEN 1 ELSE 0 END) as multi_source,
+                        SUM(CASE WHEN metadata:ai_score::number >= 50 THEN 1 ELSE 0 END) as ai_verified,
+                        SUM(CASE WHEN metadata:min_amount::number IS NOT NULL THEN 1 ELSE 0 END) as with_salary,
+                        SUM(CASE WHEN metadata:is_ai_related::boolean = true THEN 1 ELSE 0 END) as ai_related_count
                     FROM external_signals
                     WHERE company_id = %s AND category = 'hiring_signal'
                 ),
@@ -75,7 +78,8 @@ class JobSignalService:
                     SELECT *,
                         CASE WHEN total > 0 THEN leadership::float / total ELSE 0 END as lead_pct,
                         CASE WHEN mid + entry > 0 THEN senior::float / (mid + entry) ELSE senior::float END as sr_lower,
-                        CASE WHEN total > 0 THEN entry::float / total ELSE 0 END as entry_pct
+                        CASE WHEN total > 0 THEN entry::float / total ELSE 0 END as entry_pct,
+                        CASE WHEN total > 0 THEN ai_related_count::float / total ELSE 0 END as ai_ratio
                     FROM counts
                 ),
                 scored AS (
@@ -100,11 +104,18 @@ class JobSignalService:
                     %s as ticker,
                     score as hiring_score,
                     OBJECT_CONSTRUCT(
-                        'total', total,
-                        'leadership', leadership,
-                        'senior', senior,
-                        'mid', mid,
-                        'entry', entry,
+                        'total_jobs', total,
+                        'ai_related_count', ai_related_count,
+                        'ai_verified', ai_verified,
+                        'multi_source', multi_source,
+                        'with_salary', with_salary,
+                        'ai_ratio', ROUND(ai_ratio, 3),
+                        'seniority', OBJECT_CONSTRUCT(
+                            'leadership', leadership,
+                            'senior', senior,
+                            'mid', mid,
+                            'entry', entry
+                        ),
                         'phase', phase,
                         'ratios', OBJECT_CONSTRUCT(
                             'leadership_pct', ROUND(lead_pct * 100, 1),
@@ -128,6 +139,7 @@ class JobSignalService:
         cursor.execute(merge_query, (company_id, company_id, ticker))
         self.conn.commit()
         cursor.close()
+
 
 """
 Hiring Score Formula (0-100):
