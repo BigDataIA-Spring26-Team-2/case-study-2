@@ -98,7 +98,7 @@ def dedupe(df: pd.DataFrame) -> pd.DataFrame:
             
             sim = SequenceMatcher(None, combined_i, combined_j).ratio()
             
-            if sim >= 0.85:
+            if sim >= 0.9:
                 if loc_i == 'null' and loc_j != 'null':
                     df.at[i, '_keep'] = False
                     break
@@ -222,6 +222,8 @@ def prepare_for_snowflake(df: pd.DataFrame, company_id: str, ticker: str) -> lis
                 "salary_min": int(job["min_amount"]) if pd.notna(job.get("min_amount")) else None,
                 "salary_max": int(job["max_amount"]) if pd.notna(job.get("max_amount")) else None,
                 "job_url": str(job.get("job_url", "")) if pd.notna(job.get("job_url")) else "",
+                "is_ai_related": True, 
+                "ai_score": float(job.get("ai_score", 0))
             },
             "s3_full_data_key": None,
             "collected_at": datetime.now()

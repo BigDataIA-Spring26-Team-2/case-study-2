@@ -170,8 +170,8 @@ async def scan_company(ticker: str, company_id: str, token: str = None) -> dict:
             "total_repos": total,
             "ai_repos": ai_count,
             "ai_stars": stars,
-            "unique_ai_topics": list(all_matched_topics),  # NEW
-            "topic_coverage": f"{unique_topics_count}/{total_possible_topics}",  # NEW
+            "unique_ai_topics": list(all_matched_topics), 
+            "topic_coverage": f"{unique_topics_count}/{total_possible_topics}",  
             "top_repos": sorted(ai_repos, key=lambda x: -x['stars'])[:5]
         },
         "s3_full_data_key": None,
