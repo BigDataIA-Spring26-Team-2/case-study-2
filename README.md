@@ -4,7 +4,6 @@
 **Course:** Big Data and Intelligent Analytics  
 **Instructor:** Sri Krishnamurthy — QuantUniversity  
 **Term:** Spring 2026  
-**Weight:** 8% of final grade
 
 ---
 
@@ -331,11 +330,11 @@ Access dashboard at http://localhost:8501
 
 ## Team Contributions
 
-| Member | Role | Focus Area |
-|--------|------|------------|
-| [Anirudh] | Pipeline Engineer | SEC integration, document parsing, chunking |
-| [Janhavi] | Full-Stack Developer | Signal collection, API endpoints, dashboard |
-| [Minal] | Infrastructure Engineer | Database design, Docker, deployment | 
+| Member | Work |
+|--------|------------|
+| [Anirudh] | SEC integration, document parsing, chunking |
+| [Janhavi] | Signal collection, API endpoints, dashboard |
+| [Minal] | Database design, Docker, deployment | 
 
 
 ## AI Tools Usage
