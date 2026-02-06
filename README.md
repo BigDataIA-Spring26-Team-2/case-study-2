@@ -21,7 +21,7 @@
 
 | Resource | URL |
 |----------|-----|
-| Codelabs Document | https://docs.google.com/document/d/1hRYp_y6cq8XSDDxdrY7aaXaYbW0jQAfHh1WWLkbw7QM/edit?tab=t.0 |
+| Codelabs Document | https://docs.google.com/document/d/1uFsHDq6j37VhgAjeWqp7kcZAy7_f95TZzl2n8YgweHE/edit?usp=sharing |
 | Video Presentation | |
 | Live Streamlit Dashboard | http://localhost:8501|
 
