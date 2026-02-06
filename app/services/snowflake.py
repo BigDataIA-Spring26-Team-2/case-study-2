@@ -1,4 +1,4 @@
-"""Snowflake database service."""
+"""Snowflake database service with Redis caching."""
 from typing import Optional, List, Any, Tuple
 from uuid import UUID, uuid4
 from datetime import datetime, timezone
@@ -7,6 +7,7 @@ import snowflake.connector
 from snowflake.connector import DictCursor
 import structlog
 
+from app.services.redis_cache import cache, invalidate_cache
 from app.models import (
     CompanyCreate, CompanyUpdate, CompanyResponse,
     IndustryResponse,
@@ -46,6 +47,7 @@ class SnowflakeService:
         finally:
             cur.close()
     
+    @invalidate_cache("company:*", "companies:list:*")
     async def create_company(self, company: CompanyCreate) -> CompanyResponse:
         company_id = uuid4()
         now = datetime.now(timezone.utc)
@@ -64,6 +66,7 @@ class SnowflakeService:
             is_deleted=False, created_at=now, updated_at=now
         )
     
+    @cache(ttl=300, key_prefix="company")
     async def get_company(self, company_id: UUID) -> Optional[CompanyResponse]:
         async with self.cursor() as cur:
             cur.execute("""
@@ -83,6 +86,7 @@ class SnowflakeService:
             updated_at=row['UPDATED_AT']
         )
     
+    @cache(ttl=180, key_prefix="companies:list")
     async def list_companies(
         self, skip: int = 0, limit: int = 100, industry_id: Optional[UUID] = None
     ) -> Tuple[List[CompanyResponse], int]:
@@ -116,6 +120,7 @@ class SnowflakeService:
         
         return companies, total
     
+    @invalidate_cache("company:*", "companies:list:*")
     async def update_company(
         self, company_id: UUID, company: CompanyUpdate
     ) -> Optional[CompanyResponse]:
@@ -149,6 +154,15 @@ class SnowflakeService:
         
         return await self.get_company(company_id)
     
+    @invalidate_cache(
+    "company:*", 
+    "companies:list:*", 
+    "assessment:*",
+    "assessments:list:*",  
+    "evidence:*",
+    "documents:*",        
+    "signals:*"            
+    )
     async def delete_company(self, company_id: UUID) -> bool:
         async with self.cursor() as cur:
             cur.execute("""
@@ -157,6 +171,7 @@ class SnowflakeService:
             """, (datetime.now(timezone.utc), str(company_id)))
             return cur.rowcount > 0
     
+    @cache(ttl=600, key_prefix="industries")
     async def list_industries(self) -> List[IndustryResponse]:
         async with self.cursor() as cur:
             cur.execute("SELECT id, name, sector, h_r_base, created_at FROM industries ORDER BY name")
@@ -169,6 +184,7 @@ class SnowflakeService:
             ) for r in rows
         ]
     
+    @invalidate_cache("assessment:*", "assessments:list:*")
     async def create_assessment(self, assessment: AssessmentCreate) -> AssessmentResponse:
         assessment_id = uuid4()
         now = datetime.now(timezone.utc)
@@ -191,6 +207,7 @@ class SnowflakeService:
             confidence_lower=None, confidence_upper=None, created_at=now
         )
     
+    @cache(ttl=300, key_prefix="assessment")
     async def get_assessment(self, assessment_id: UUID) -> Optional[AssessmentResponse]:
         async with self.cursor() as cur:
             cur.execute("""
@@ -215,6 +232,7 @@ class SnowflakeService:
             created_at=row['CREATED_AT']
         )
     
+    @cache(ttl=180, key_prefix="assessments:list")
     async def list_assessments(
         self, skip: int = 0, limit: int = 100, 
         company_id: Optional[UUID] = None, status: Optional[str] = None
@@ -279,6 +297,7 @@ class SnowflakeService:
         
         return (len(errors) == 0, errors)
     
+    @invalidate_cache("assessment:*", "assessments:list:*")
     async def update_assessment_status(
         self, assessment_id: UUID, new_status: str
     ) -> Optional[AssessmentResponse]:
@@ -299,6 +318,7 @@ class SnowflakeService:
         
         return await self.get_assessment(assessment_id)
     
+    @invalidate_cache("dimension:*", "assessment:*")
     async def create_dimension_score(self, score: DimensionScoreCreate) -> DimensionScoreResponse:
         score_id = uuid4()
         now = datetime.now(timezone.utc)
@@ -317,6 +337,7 @@ class SnowflakeService:
             evidence_count=score.evidence_count, created_at=now
         )
     
+    @cache(ttl=300, key_prefix="dimension:scores")
     async def get_dimension_scores(self, assessment_id: UUID) -> List[DimensionScoreResponse]:
         async with self.cursor() as cur:
             cur.execute("""
@@ -335,6 +356,7 @@ class SnowflakeService:
             ) for r in rows
         ]
     
+    @invalidate_cache("dimension:*", "assessment:*")
     async def update_dimension_score(
         self, score_id: UUID, score_update: DimensionScoreUpdate
     ) -> Optional[DimensionScoreResponse]:
@@ -387,18 +409,6 @@ class SnowflakeService:
             weight=float(row['WEIGHT']), confidence=float(row['CONFIDENCE']),
             evidence_count=row['EVIDENCE_COUNT'], created_at=row['CREATED_AT']
         )
-    
-    async def list_industries(self) -> List[IndustryResponse]:
-        async with self.cursor() as cur:
-            cur.execute("SELECT id, name, sector, h_r_base, created_at FROM industries ORDER BY name")
-            rows = cur.fetchall()
-        
-        return [
-            IndustryResponse(
-                id=UUID(r['ID']), name=r['NAME'], sector=r['SECTOR'],
-                h_r_base=float(r['H_R_BASE']), created_at=r['CREATED_AT']
-            ) for r in rows
-        ]
     
     async def seed_data(self):
         from app.database.seed import seed_all

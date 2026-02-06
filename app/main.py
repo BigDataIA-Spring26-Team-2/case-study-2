@@ -5,6 +5,7 @@ import structlog
 
 from app.routers import health, companies, assessments, dimensions
 from app.routers import documents, signals, evidence
+from app.services.redis_cache import redis_service
 
 logger = structlog.get_logger()
 
@@ -37,11 +38,14 @@ app.include_router(documents.router)
 @app.on_event("startup")
 async def startup():
     logger.info("PE Org-AI-R Platform starting")
-
+    await redis_service.connect()  
+    logger.info("Redis connected")  
 
 @app.on_event("shutdown")
 async def shutdown():
     logger.info("PE Org-AI-R Platform shutting down")
+    await redis_service.disconnect()  
+    logger.info("Redis disconnected")  
 
 
 @app.get("/")

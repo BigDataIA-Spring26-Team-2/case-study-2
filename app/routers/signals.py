@@ -9,6 +9,8 @@ from uuid import UUID
 from typing import List
 import subprocess
 import json
+from app.services.redis_cache import redis_service
+import hashlib
 
 from app.database import get_db
 
@@ -58,6 +60,12 @@ async def collect_signals(request: SignalCollectionRequest, background_tasks: Ba
     ticker = get_ticker_from_company_id(request.company_id, conn)
     background_tasks.add_task(run_signal_pipelines, ticker, request.pipelines)
     
+    # Invalidate caches
+    await redis_service.delete_pattern(f"signals:company:{request.company_id}")
+    await redis_service.delete_pattern(f"signals:category:{request.company_id}:*")
+    await redis_service.delete_pattern(f"evidence:company:{request.company_id}")
+    await redis_service.delete_pattern("evidence:stats")
+
     return SignalCollectionResponse(
         message=f"Signal collection started for {ticker}. Check back in 5-10 minutes.",
         company_id=request.company_id,
@@ -70,6 +78,13 @@ async def collect_hiring_signal(company_id: UUID, background_tasks: BackgroundTa
     """Trigger hiring signal collection only."""
     ticker = get_ticker_from_company_id(company_id, conn)
     background_tasks.add_task(run_signal_pipelines, ticker, ["job"])
+
+    # Invalidate caches
+    await redis_service.delete_pattern(f"signals:company:{company_id}")
+    await redis_service.delete_pattern(f"signals:category:{company_id}:hiring_signal")
+    await redis_service.delete_pattern(f"evidence:company:{company_id}")
+    await redis_service.delete_pattern("evidence:stats")
+
     return {"message": f"Hiring signal collection started for {ticker}"}
 
 
@@ -78,6 +93,13 @@ async def collect_patent_signal(company_id: UUID, background_tasks: BackgroundTa
     """Trigger patent signal collection only."""
     ticker = get_ticker_from_company_id(company_id, conn)
     background_tasks.add_task(run_signal_pipelines, ticker, ["patent"])
+
+    # Invalidate caches
+    await redis_service.delete_pattern(f"signals:company:{company_id}")
+    await redis_service.delete_pattern(f"signals:category:{company_id}:patent")
+    await redis_service.delete_pattern(f"evidence:company:{company_id}")
+    await redis_service.delete_pattern("evidence:stats")
+
     return {"message": f"Patent signal collection started for {ticker}"}
 
 
@@ -86,12 +108,25 @@ async def collect_github_signal(company_id: UUID, background_tasks: BackgroundTa
     """Trigger GitHub signal collection only."""
     ticker = get_ticker_from_company_id(company_id, conn)
     background_tasks.add_task(run_signal_pipelines, ticker, ["github"])
+
+    # Invalidate caches
+    await redis_service.delete_pattern(f"signals:company:{company_id}")
+    await redis_service.delete_pattern(f"signals:category:{company_id}:github")
+    await redis_service.delete_pattern(f"evidence:company:{company_id}")
+    await redis_service.delete_pattern("evidence:stats")
+
     return {"message": f"GitHub signal collection started for {ticker}"}
 
 
 @router.get("/companies/{company_id}/signals")
 async def get_company_signals(company_id: UUID, conn = Depends(get_db)):
     """Get signal summary for a company."""
+    # Cache check
+    cache_key = f"signals:company:{company_id}"
+    cached = await redis_service.get(cache_key)
+    if cached:
+        return cached
+    
     cursor = conn.cursor()
     
     cursor.execute("""
@@ -106,7 +141,7 @@ async def get_company_signals(company_id: UUID, conn = Depends(get_db)):
     if not row:
         raise HTTPException(status_code=404, detail="Company not found")
     
-    return {
+    result= {
         "ticker": row[0],
         "hiring_score": float(row[1]) if row[1] else None,
         "patent_score": float(row[2]) if row[2] else None,
@@ -116,10 +151,21 @@ async def get_company_signals(company_id: UUID, conn = Depends(get_db)):
         "last_updated": row[6]
     }
 
+    # Cache result
+    await redis_service.set(cache_key, result, ttl=60)
+    
+    return result
+
 
 @router.get("/companies/{company_id}/signals/{category}")
 async def get_company_signals_by_category(company_id: UUID, category: str, conn = Depends(get_db)):
     """Get detailed signal data with FULL metadata parsing for dashboard."""
+    # Cache check
+    cache_key = f"signals:category:{company_id}:{category}"
+    cached = await redis_service.get(cache_key)
+    if cached:
+        return cached
+    
     cursor = conn.cursor()
     
     # Map category to summary table columns
@@ -167,7 +213,7 @@ async def get_company_signals_by_category(company_id: UUID, category: str, conn 
         seniority = metadata.get('seniority', {})
         ratios = metadata.get('ratios', {})
         
-        return {
+        result= {
             "category": category,
             "score": score,
             "confidence": confidence,
@@ -184,15 +230,19 @@ async def get_company_signals_by_category(company_id: UUID, category: str, conn 
                 "entry": seniority.get('entry', 0)
             },
             "ratios": ratios,
-            "jobs": [],  # ADD THIS - empty list since jobs aren't in summary metadata
+            "jobs": [],  
             "metadata": metadata
         }
+        await redis_service.set(cache_key, result, ttl=60)
+        return result
+
+
     
     elif category == "patent":
         by_year = metadata.get('by_year', {})
         top_patents = metadata.get('top_patents', [])
         
-        return {
+        result= {
             "category": category,
             "score": score,
             "confidence": confidence,
@@ -207,12 +257,15 @@ async def get_company_signals_by_category(company_id: UUID, category: str, conn 
             "patents": top_patents,  
             "metadata": metadata
         }
+        await redis_service.set(cache_key, result, ttl=60)
+        return result
+
     
     elif category == "github":
         top_repos = metadata.get('top_repos', [])
         orgs = metadata.get('orgs', [])
         
-        return {
+        result= {
             "category": category,
             "score": score,
             "confidence": confidence,
@@ -227,11 +280,18 @@ async def get_company_signals_by_category(company_id: UUID, category: str, conn 
             "organizations": orgs,
             "metadata": metadata
         }
+        await redis_service.set(cache_key, result, ttl=60)
+        return result
     
-    return {
+    result = {
         "category": category,
         "score": score,
         "confidence": confidence,
         "collected_at": collected_at,
         "metadata": metadata
     }
+    
+    # Cache result
+    await redis_service.set(cache_key, result, ttl=60)
+    
+    return result

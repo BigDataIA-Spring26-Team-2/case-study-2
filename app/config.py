@@ -42,16 +42,16 @@ class RedisConfig(BaseSettings):
 class S3Config(BaseSettings):
     """AWS S3 configuration."""
     
-    access_key_id: str = Field(default="")
-    secret_access_key: SecretStr = Field(default="")
-    bucket: str = Field(default="")
-    region: str = Field(default="us-east-1")
+    access_key_id: str = Field(default="", alias="AWS_ACCESS_KEY_ID")
+    secret_access_key: SecretStr = Field(default="", alias="AWS_SECRET_ACCESS_KEY")
+    bucket: str = Field(default="", alias="S3_BUCKET")  # Changed this
+    region: str = Field(default="us-east-1", alias="AWS_REGION")
     
     model_config = SettingsConfigDict(
-        env_prefix="AWS_",
         env_file=".env",
         case_sensitive=False,
-        extra="ignore"
+        extra="ignore",
+        populate_by_name=True  
     )
 
 

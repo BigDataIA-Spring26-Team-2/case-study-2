@@ -6,6 +6,9 @@ from typing import Optional, List
 import subprocess
 import logging
 from pathlib import Path
+from app.services.redis_cache import redis_service
+import hashlib
+import json
 
 
 logging.basicConfig(level=logging.INFO)
@@ -119,6 +122,11 @@ async def backfill_evidence(
     # Queue collection
     task_id = str(uuid4())
     background_tasks.add_task(run_collection_task, task_id, tickers, request.pipelines)
+
+    # Invalidate all caches (affects multiple companies)
+    await redis_service.delete_pattern("signals:*")
+    await redis_service.delete_pattern("evidence:*")
+    await redis_service.delete_pattern("documents:*")
     
     return BackfillResponse(
         task_id=task_id,
@@ -131,6 +139,13 @@ async def backfill_evidence(
 @router.get("/stats")
 async def get_evidence_stats(conn = Depends(get_db)):
     """Get overall evidence statistics."""
+    # Cache check
+    cache_key = "evidence:stats"
+    cached = await redis_service.get(cache_key)
+    if cached:
+        return cached
+
+
     cursor = conn.cursor()
     
     cursor.execute("""
@@ -153,7 +168,7 @@ async def get_evidence_stats(conn = Depends(get_db)):
     
     companies = cursor.fetchall()
     
-    return {
+    result= {
         "overall": {
             "companies_processed": overall[0] or 0,
             "total_documents": overall[1] or 0,
@@ -172,11 +187,21 @@ async def get_evidence_stats(conn = Depends(get_db)):
             for c in companies
         ]
     }
+    await redis_service.set(cache_key, result, ttl=60)
+    return result
+
+
 
 
 @router.get("/companies/{company_id}/evidence")
 async def get_company_evidence(company_id: UUID, conn = Depends(get_db)):
     """Get all evidence for a company."""
+    # Cache check
+    cache_key = f"evidence:company:{company_id}"
+    cached = await redis_service.get(cache_key)
+    if cached:
+        return cached
+
     cursor = conn.cursor()
     
     cursor.execute("""
@@ -211,7 +236,7 @@ async def get_company_evidence(company_id: UUID, conn = Depends(get_db)):
     
     signals = cursor.fetchall()
     
-    return {
+    result= {
         "ticker": summary[0],
         "summary": {
             "total_documents": summary[1] or 0,
@@ -232,3 +257,5 @@ async def get_company_evidence(company_id: UUID, conn = Depends(get_db)):
             for s in signals
         ]
     }
+    await redis_service.set(cache_key, result, ttl=60)
+    return result

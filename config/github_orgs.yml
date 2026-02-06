@@ -4,7 +4,7 @@ github_orgs:
   DE: ["JohnDeere", "johndeere"]
   UNH: ["optum", "uhg"]
   HCA: ["HCA-Healthcare"]
-  ADP: ["adplabs"]
+  ADP: ["adplabs", "adpllc"]
   PAYX: ["paychex"]
   WMT: ["walmart", "walmartlabs"]
   TGT: ["target"]
