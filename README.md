@@ -22,7 +22,7 @@
 | Resource | URL |
 |----------|-----|
 | Codelabs Document | https://docs.google.com/document/d/1uFsHDq6j37VhgAjeWqp7kcZAy7_f95TZzl2n8YgweHE/edit?usp=sharing |
-| Video Presentation | |
+| Video Presentation | https://northeastern.zoom.us/rec/share/o5VAgQeBBP9c_jdimYl_KlVIHy7jDZIiorEGH-wlTM8uJNllL3dlesM8DAgrJp5S.BQ90GkrEwcGVuNix?startTime=1770409186000 |
 | Live Streamlit Dashboard | http://localhost:8501|
 
 
