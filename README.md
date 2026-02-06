@@ -336,8 +336,8 @@ curl http://localhost:8000/api/v1/documents | jq
 
 ## AI Tools Usage
 
-| AI Tool | Usage Level | Purpose |
-|---------|-------------|---------|
+| AI Tool | Usage Level | 
+|---------|-------------|
 | Claude 3.5 Sonnet (Anthropic) | High |
 | GitHub Copilot | Medium | 
 
