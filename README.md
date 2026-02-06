@@ -2,8 +2,6 @@
 ## Evidence Collection - "What Companies Say vs. What They Do"
 
 **Course:** Big Data and Intelligent Analytics  
-**Instructor:** Sri Krishnamurthy — QuantUniversity  
-**Term:** Spring 2026  
 
 ---
 
@@ -26,8 +24,7 @@
 | Codelabs Document | https://docs.google.com/document/d/1hRYp_y6cq8XSDDxdrY7aaXaYbW0jQAfHh1WWLkbw7QM/edit?tab=t.0 |
 | Video Presentation | |
 | Live Streamlit Dashboard | http://localhost:8501|
-| API Documentation (Swagger) | http://localhost:8000/docs |
-| GitHub Repository | https://github.com/BigDataIA-Spring26-Team-2|
+
 
 ---
 
@@ -316,7 +313,7 @@ docker-compose up -d
 python scripts/collect_evidence.py --companies all
 ```
 
-This downloads SEC filings, collects external signals, and populates the database. Expected runtime: 15-20 minutes for 10 companies.
+This downloads SEC filings, collects external signals, and populates the database. 
 
 **Verify:**
 ```bash
@@ -324,7 +321,7 @@ curl http://localhost:8000/health
 curl http://localhost:8000/api/v1/documents | jq
 ```
 
-Access dashboard at http://localhost:8501
+
 
 ---
 
@@ -339,13 +336,11 @@ Access dashboard at http://localhost:8501
 
 ## AI Tools Usage
 
-We used three AI tools during development:
+| AI Tool | Usage Level | Purpose |
+|---------|-------------|---------|
+| Claude 3.5 Sonnet (Anthropic) | High |
+| GitHub Copilot | Medium | 
 
-**Claude 3.5 Sonnet** - Primary coding assistant for pipeline logic, parsing algorithms, and complex data transformations. Generated initial structure for SEC parser and chunking logic, which we then modified extensively for our specific requirements.
-
-**GitHub Copilot** - Code completion for repetitive patterns like API endpoints, test cases, and data validation logic. Particularly useful for boilerplate in router files.
-
-**ChatGPT-4** - Occasional consultation on algorithm design and error handling strategies.
 
 ---
 
