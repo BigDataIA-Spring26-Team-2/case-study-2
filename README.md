@@ -32,7 +32,7 @@
 
 | Resource | URL |
 |----------|-----|
-| Codelabs Document | https://docs.google.com/document/d/1hRYp_y6cq8XSDDxdrY7aaXaYbW0jQAfHh1WWLkbw7QM/edit?usp=sharing |
+| Codelabs Document | https://docs.google.com/document/d/1lCN91g7-3JC3hcFBV3tNC85RoroQoVF6fdgQvhQdz9s/edit?usp=sharing |
 | Video Presentation | https://northeastern.zoom.us/rec/share/o5VAgQeBBP9c_jdimYl_KlVIHy7jDZIiorEGH-wlTM8uJNllL3dlesM8DAgrJp5S.BQ90GkrEwcGVuNix?startTime=1770409186000 |
 | Live Streamlit Dashboard | http://localhost:8501|
 
