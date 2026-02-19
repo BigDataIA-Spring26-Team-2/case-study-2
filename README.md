@@ -6,14 +6,25 @@
 ---
 
 ## Table of Contents
-- [Project Links](#project-links)
-- [Project Overview](#project-overview)
-- [Architecture](#architecture)
-- [Directory Structure](#directory-structure)
-- [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
-- [Team Contributions](#team-contributions)
-- [AI Tools Usage](#ai-tools-usage)
+- [PE Org-AI-R Platform: Case Study 2](#pe-org-ai-r-platform-case-study-2)
+  - [Evidence Collection - "What Companies Say vs. What They Do"](#evidence-collection---what-companies-say-vs-what-they-do)
+  - [Table of Contents](#table-of-contents)
+  - [Project Links](#project-links)
+  - [Project Overview](#project-overview)
+    - [Purpose](#purpose)
+    - [Scope](#scope)
+    - [Business Value](#business-value)
+    - [Tech Stack](#tech-stack)
+  - [Architecture](#architecture)
+    - [System Architecture](#system-architecture)
+    - [Data Flow](#data-flow)
+  - [Directory Structure](#directory-structure)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Setup](#setup)
+  - [Team Contributions](#team-contributions)
+  - [AI Tools Usage](#ai-tools-usage)
+  - [Academic Integrity](#academic-integrity)
 
 ---
 
