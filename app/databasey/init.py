@@ -20,7 +20,7 @@ async def init_database():
         logger.info("Migrations complete")
         
         logger.info("Seeding reference data")
-        from app.database.seed import seed_all
+        from app.databasey.seed import seed_all
         from app.services.snowflake import SnowflakeService
         from app.config import get_settings
         

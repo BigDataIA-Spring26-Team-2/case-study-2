@@ -1,5 +1,5 @@
 detection:
-  min_similarity: 0.6
+  min_similarity: 0.35
   
   ai_references:
     - neural network architecture training backpropagation gradient descent optimization

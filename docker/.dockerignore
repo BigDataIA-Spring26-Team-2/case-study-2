@@ -1,7 +1,70 @@
-.git
-__pycache__
-*.pyc
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Poetry cache
+.poetry/
+
+# Data files - DON'T copy into image
+data/
+*.csv
+*.json
+*.parquet
+*.xlsx
+*.pdf
+*.db
+*.sqlite
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docker files
+.dockerignore
+Dockerfile
+docker-compose*.yml
+
+# Tests
+tests/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Logs
+*.log
+logs/
+
+# Environment (we mount this separately)
 .env
-.cache
-node_modules
-venv
+.env.*
+!.env.example
+
+# Documentation
+docs/
+README.md
+
+# CI/CD
+.github/
